@@ -1,17 +1,10 @@
----
-title: "Digital Platforms and Ecosystems"
-output: html_document
-date: '2022-11-01'
----
 
-
-```{r}
 setwd("~/Desktop/test")
 rm(list = ls())
-```
 
-libraries 
-```{r, message=FALSE}
+
+#libraries 
+
 library(httr)
 library(jsonlite)
 library(RSelenium)
@@ -20,26 +13,23 @@ library(xml2)
 library(yaml)
 library(dplyr)
 library(stringr)
-```
-Open Rselenium
-```{r}
+
+#Open Rselenium
 remDr <- RSelenium::remoteDriver(port = 4444L, remoteServerAddr = "192.168.1.213")
 rD <- RSelenium::rsDriver(browser = "chrome", port = 5805L, chromever = "107.0.5304.62", verbose = FALSE)
 remDr <- rD[["client"]]
 remDr$open(silent = TRUE)
 remDr$setTimeout(type = "implicit", milliseconds = 3000)
-```
-Scrape Google website  
 
-```{r}
+#Scrape Google website  
+
 base_url <- "https://www.google.com/search?q="
 queries_unfiltered <- read.csv(file = "C:/Users/whatt/iCloudDrive/UZH/Master/HS22/Informatics/Digital platforms and ecosystems/QuerieswUmlaut.csv")
 stripped_queries <- queries_unfiltered[,2, drop = FALSE]
 stripped_queries
 cookies_xpath <- "//button[@id='W0wltc']" 
-```
 
-```{r}
+#Form queries
 df <- data.frame()
 
 temp = gsub(" ", "+", stripped_queries$X)
@@ -48,10 +38,10 @@ temp_2 = data.frame(temp)
 url = temp_2 %>% mutate(temp = paste0('https://www.google.com/search?q=',temp))
 
 first_run <- TRUE
-```
 
-Iterating through queries
-```{r}
+
+#Iterating through queries
+
 for(r in 1:nrow(url))  {
   remDr$navigate(url[r,1])
   if(first_run){
@@ -87,12 +77,12 @@ for(r in 1:nrow(url))  {
   df <- rbind(df, a)
 }
 df
-```
 
-Close browser
-```{r}
+
+#Close browser
+
 remDr$closeServer()
 rD[["server"]]$stop()
 rm(list = ls(all.names = TRUE))
 gc()
-```
+
