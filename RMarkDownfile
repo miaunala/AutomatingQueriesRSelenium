@@ -29,7 +29,7 @@ remDr <- rD[["client"]]
 remDr$open(silent = TRUE)
 remDr$setTimeout(type = "implicit", milliseconds = 3000)
 ```
-## Scrape Google website  
+Scrape Google website  
 
 ```{r}
 base_url <- "https://www.google.com/search?q="
@@ -50,7 +50,7 @@ url = temp_2 %>% mutate(temp = paste0('https://www.google.com/search?q=',temp))
 first_run <- TRUE
 ```
 
-# Iterating through queries
+Iterating through queries
 ```{r}
 for(r in 1:nrow(url))  {
   remDr$navigate(url[r,1])
